@@ -7,9 +7,18 @@ import { LotteryCard } from "./LotteryCard";
 interface Props {
   lotteries: Array<Lottery>;
   loading: boolean;
+  selectedLotteries: Array<string>;
+  registeredLotteries: Array<string>;
+  onSelect: (lotteryId: string) => void;
 }
 
-export function LotteryList({ lotteries, loading }: Props) {
+export function LotteryList({
+  lotteries,
+  loading,
+  selectedLotteries,
+  registeredLotteries,
+  onSelect,
+}: Props) {
   const [filter, setFilter] = useState("");
 
   const filteredLotteries = lotteries.filter((lottery) =>
@@ -59,7 +68,14 @@ export function LotteryList({ lotteries, loading }: Props) {
         <FlatList
           data={filteredLotteries}
           keyExtractor={(item) => item.id}
-          renderItem={({ item }) => <LotteryCard lottery={item} />}
+          renderItem={({ item }) => (
+            <LotteryCard
+              lottery={item}
+              selected={selectedLotteries.includes(item.id)}
+              registered={registeredLotteries.includes(item.id)}
+              onSelect={() => onSelect(item.id)}
+            />
+          )}
           contentContainerStyle={styles.listContent}
         />
       )}
